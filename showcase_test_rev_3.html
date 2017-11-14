@@ -1,0 +1,66 @@
+﻿<html>
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script type="text/javascript">
+        var global_hex_name = [];
+        var global_hex_id = [];
+        var global_hex_index = -1;
+        var view_url = "https://makecode.microbit.org/#pub:_3jzTRKfDEXAP&lang=zh-TW";
+        $(document).ready(function (){        
+            $.ajaxSetup({ cache: false });
+            $.getJSON("/jquery_microbit_showcase/microbit_basic.json", function(data){ 
+               var current_index = 0;
+               $.each(data, function(index, d){            
+                   global_hex_name.push(d.name);
+                   global_hex_id.push(d.id);
+                   $("#show_form").append(
+                      $('<option></option>').val(current_index).html(d.name)
+                      );
+                   current_index++;
+               });
+               console.log(current_index);
+           });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="page_title">    
+        Micro:bit 應用（初階）範本檔案
+    </div>   
+
+
+    <div id="form_container">
+        <select id="show_form">
+            <option value="-1">選擇檔案：</option>
+        </select>
+    </div>
+
+    <div id="selected_file_name_div">
+        未選擇檔案
+    </div>
+
+    <div id="microbit_container" style="display:none">
+        <div id="microbit_window" style="position:relative;height:0;padding-bottom:70%;overflow:hidden;"><iframe id="microbit_iframe" style="position:absolute;top:0;left:0;width:100%;height:100%;" src="https://makecode.microbit.org/#pub:_3jzTRKfDEXAP&lang=zh-TW" frameborder="0" sandbox="allow-popups allow-forms allow-scripts allow-same-origin"></iframe></div>
+    </div>
+</div>
+
+<script>
+    $( "select" ).change(function () {
+        $("select option:selected").each(function() {
+          str = $(this).text() + " ";
+          global_hex_index = $(this).val();
+      });
+        $("#selected_file_name_div").text(str);
+        var $iframe = $('#microbit_iframe');
+        if ($iframe.length) {
+            view_url = "https://makecode.microbit.org/#pub:" + global_hex_id[global_hex_index] + "";
+           $iframe.attr('src', view_url);
+       }
+       if (global_hex_index > -1){
+          $("#microbit_container").attr('style',"display:inline");
+      }
+  });
+</script>
+</body>
+</html>
